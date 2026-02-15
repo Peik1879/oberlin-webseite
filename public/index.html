@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Oberlinhaus Werkstatt Portal - Anmelden</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <a href="#main-content" class="skip-to-main">Zum Hauptinhalt springen</a>
@@ -104,8 +104,8 @@
     <button id="easy-language-btn" aria-label="Leichte Sprache" aria-pressed="false">ABC</button>
   </footer>
 
-  <script src="/js/accessibility.js" type="module"></script>
-  <script src="/js/easy-language.js" type="module"></script>
+  <script src="js/accessibility.js" type="module"></script>
+  <script src="js/easy-language.js" type="module"></script>
   
   <script>
     function switchToEmailLogin() {
@@ -136,7 +136,7 @@
 
         if (response.ok) {
           // Success
-          window.location.href = '/dashboard.html';
+          window.location.href = 'dashboard.html';
         } else {
           showError(data.error || 'Login fehlgeschlagen');
         }
@@ -161,7 +161,7 @@
         const data = await response.json();
 
         if (response.ok) {
-          window.location.href = '/dashboard.html';
+          window.location.href = 'dashboard.html';
         } else {
           showError(data.error || 'Login fehlgeschlagen');
         }
@@ -188,3 +188,4 @@
   </script>
 </body>
 </html>
+

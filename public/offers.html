@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Angebote - Oberlinhaus Werkstatt Portal</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <a href="#main-content" class="skip-to-main">Zum Hauptinhalt</a>
@@ -31,12 +31,13 @@
     <button id="easy-language-btn">ABC</button>
   </footer>
   <script>
-    fetch('/api/auth/me').then(r => r.json()).then(d => document.getElementById('user-name').textContent = d.user.firstname).catch(() => location.href = '/');
+    fetch('/api/auth/me').then(r => r.json()).then(d => document.getElementById('user-name').textContent = d.user.firstname).catch(() => location.href = 'index.html');
     fetch('/api/offers').then(r => r.json()).then(d => {
       const c = document.getElementById('offers-container');
       d.forEach(o => c.innerHTML += `<div class="card"><h3>${o.title}</h3><p>${o.description}</p><p>🕐 ${o.time} | 📍 ${o.location}</p></div>`);
     });
-    document.getElementById('logout-btn').onclick = () => fetch('/api/auth/logout', {method: 'POST'}).then(() => location.href = '/');
+    document.getElementById('logout-btn').onclick = () => fetch('/api/auth/logout', {method: 'POST'}).then(() => location.href = 'index.html');
   </script>
 </body>
 </html>
+

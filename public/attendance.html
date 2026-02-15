@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Anwesenheit - Oberlinhaus Werkstatt Portal</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <a href="#main-content" class="skip-to-main">Zum Hauptinhalt springen</a>
@@ -71,8 +71,8 @@
     <button id="easy-language-btn" aria-label="Leichte Sprache" aria-pressed="false">ABC</button>
   </footer>
 
-  <script src="/js/accessibility.js" type="module"></script>
-  <script src="/js/easy-language.js" type="module"></script>
+  <script src="js/accessibility.js" type="module"></script>
+  <script src="js/easy-language.js" type="module"></script>
 
   <script>
     // Set heute als default Datum
@@ -155,7 +155,7 @@
 
     async function logout() {
       await fetch('/api/auth/logout', { method: 'POST' });
-      window.location.href = '/';
+      window.location.href = 'index.html';
     }
 
     document.getElementById('logout-btn').addEventListener('click', logout);
@@ -207,7 +207,8 @@
         document.getElementById('user-name').textContent = `${data.user.firstname} ${data.user.lastname}`;
         loadAttendanceHistory();
       })
-      .catch(() => window.location.href = '/');
+      .catch(() => window.location.href = 'index.html');
   </script>
 </body>
 </html>
+
