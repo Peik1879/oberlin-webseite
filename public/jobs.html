@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jobbörse - Oberlinhaus Werkstatt Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <a href="#main-content" class="skip-to-main">Zum Hauptinhalt</a>
+  <header role="banner">
+    <div class="container">
+      <div class="header-logo">
+        <div class="logo-circle">OH</div>
+        <div class="header-content">
+          <h1>Oberlinhaus Werkstatt</h1>
+        </div>
+      </div>
+      <div class="header-user"><span id="user-name"></span><button class="btn btn-secondary" id="logout-btn">Abmelden</button></div>
+    </div>
+  </header>
+  <main id="main-content">
+    <div class="container">
+      <h2>💼 Jobbörse - Freie Stellen</h2>
+      <div id="jobs-container" class="grid"></div>
+    </div>
+  </main>
+  <footer class="accessibility-footer">
+    <button id="font-size-btn">🔤 A</button><button id="text-to-speech-btn">🔊</button><button id="easy-language-btn">ABC</button>
+  </footer>
+  <script>
+    fetch('/api/auth/me').then(r => r.json()).then(d => document.getElementById('user-name').textContent = d.user.firstname).catch(() => location.href = '/');
+    fetch('/api/jobs').then(r => r.json()).then(d => {
+      const c = document.getElementById('jobs-container');
+      d.forEach(j => c.innerHTML += `<div class="card"><h3>${j.title}</h3><p>${j.description}</p><p>⏱️ ${j.hours_per_week}h/Woche</p><button class="btn">Bewerben</button></div>`);
+    });
+    document.getElementById('logout-btn').onclick = () => fetch('/api/auth/logout', {method: 'POST'}).then(() => location.href = '/');
+  </script>
+</body>
+</html>

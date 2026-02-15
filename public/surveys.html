@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Umfragen - Oberlinhaus Werkstatt Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <a href="#main-content" class="skip-to-main">Zum Hauptinhalt springen</a>
+
+  <header role="banner">
+    <div class="container">
+      <div class="header-logo">
+        <div class="logo-circle">OH</div>
+        <div class="header-content">
+          <h1>Oberlinhaus Werkstatt</h1>
+          <p class="header-subtitle">Einfach. Übersichtlich. Barrierefrei.</p>
+        </div>
+      </div>
+      <div class="header-user">
+        <span id="user-name"></span>
+        <button class="btn btn-secondary" id="logout-btn">Abmelden</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <div class="container">
+      <h2>🗳️ Umfragen</h2>
+      <p>Hier kannst du bei Abstimmungen mitmachen und die Ergebnisse sehen.</p>
+
+      <div id="surveys-loading" style="text-align: center; padding: 2rem;">
+        <div class="spinner"></div>
+        <p>Wird geladen...</p>
+      </div>
+
+      <div id="surveys-container" style="display: none;"></div>
+      <div id="surveys-error" style="display: none;" class="alert alert-error"></div>
+    </div>
+  </main>
+
+  <footer class="accessibility-footer">
+    <button id="font-size-btn" aria-label="Schriftgröße ändern">🔤 A</button>
+    <button id="text-to-speech-btn" aria-label="Vorlesen" aria-pressed="false">🔊</button>
+    <button id="easy-language-btn" aria-label="Leichte Sprache" aria-pressed="false">ABC</button>
+  </footer>
+
+  <script src="/js/accessibility.js" type="module"></script>
+  <script src="/js/easy-language.js" type="module"></script>
+
+  <script>
+    async function loadSurveys() {
+      try {
+        const response = await fetch('/api/surveys');
+        const surveys = await response.json();
+
+        const container = document.getElementById('surveys-container');
+        container.innerHTML = '';
+
+        if (surveys.length === 0) {
+          container.innerHTML = '<p>Keine aktiven Umfragen vorhanden.</p>';
+        } else {
+          surveys.forEach(survey => {
+            const surveyEl = document.createElement('div');
+            surveyEl.className = 'card';
+            surveyEl.innerHTML = `
+              <h3 class="card-title">${survey.title}</h3>
+              <p>${survey.question}</p>
+              
+              <div id="survey-${survey.id}-buttons" class="btn-group">
+                ${survey.options.map(option => `
+                  <button class="btn" onclick="submitAnswer(${survey.id}, ${option.id})" 
+                          ${survey.hasAnswered ? 'disabled' : ''}>
+                    ${option.option_text}
+                  </button>
+                `).join('')}
+              </div>
+
+              <div id="survey-${survey.id}-results" style="${survey.hasAnswered ? '' : 'display: none;'} margin-top: 1rem;"></div>
+
+              ${survey.hasAnswered ? `<small style="color: #666; display: block; margin-top: 0.5rem;">✅ Du hast bereits abgestimmt</small>` : ''}
+            `;
+
+            container.appendChild(surveyEl);
+
+            if (survey.hasAnswered) {
+              loadSurveyResults(survey.id);
+            }
+          });
+        }
+
+        document.getElementById('surveys-loading').style.display = 'none';
+        container.style.display = 'block';
+      } catch (error) {
+        document.getElementById('surveys-loading').style.display = 'none';
+        showError('Fehler beim Laden: ' + error.message);
+      }
+    }
+
+    async function submitAnswer(surveyId, optionId) {
+      try {
+        const response = await fetch(`/api/surveys/${surveyId}/answer`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ optionId })
+        });
+
+        if (response.ok) {
+          // Buttons deaktivieren
+          document.querySelectorAll(`#survey-${surveyId}-buttons button`).forEach(btn => {
+            btn.disabled = true;
+          });
+
+          // Success Message
+          const surveyEl = document.querySelector(`#survey-${surveyId}-buttons`).parentElement;
+          const messageEl = document.createElement('small');
+          messageEl.className = 'alert alert-success';
+          messageEl.style.display = 'block';
+          messageEl.textContent = '✅ Danke für deine Antwort!';
+          surveyEl.appendChild(messageEl);
+
+          // Results laden
+          loadSurveyResults(surveyId);
+        } else {
+          const error = await response.json();
+          alert(error.error);
+        }
+      } catch (error) {
+        alert('Fehler: ' + error.message);
+      }
+    }
+
+    async function loadSurveyResults(surveyId) {
+      try {
+        const response = await fetch(`/api/surveys/${surveyId}/results`);
+        const results = await response.json();
+
+        const resultsContainer = document.getElementById(`survey-${surveyId}-results`);
+        resultsContainer.innerHTML = '<h4>Ergebnisse:</h4>';
+
+        const totalAnswers = results.reduce((sum, r) => sum + r.answer_count, 0);
+
+        results.forEach(option => {
+          const percentage = totalAnswers > 0 ? Math.round((option.answer_count / totalAnswers) * 100) : 0;
+          
+          resultsContainer.innerHTML += `
+            <div style="margin-bottom: 1rem;">
+              <p><strong>${option.option_text}</strong></p>
+              <div style="background: #f0f0f0; height: 30px; border-radius: 6px; overflow: hidden;">
+                <div style="background: #b61b3e; height: 100%; width: ${percentage}%; display: flex; align-items: center; padding: 0 0.5rem; color: white;">
+                  ${percentage}% (${option.answer_count})
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        resultsContainer.style.display = 'block';
+      } catch (error) {
+        console.error('Error loading results:', error);
+      }
+    }
+
+    function showError(message) {
+      document.getElementById('surveys-loading').style.display = 'none';
+      const errorEl = document.getElementById('surveys-error');
+      errorEl.textContent = message;
+      errorEl.style.display = 'block';
+    }
+
+    async function logout() {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      window.location.href = '/';
+    }
+
+    document.getElementById('logout-btn').addEventListener('click', logout);
+    document.getElementById('font-size-btn').addEventListener('click', toggleFontSize);
+    document.getElementById('text-to-speech-btn').addEventListener('click', toggleTextToSpeech);
+    document.getElementById('easy-language-btn').addEventListener('click', toggleEasyLanguage);
+
+    function toggleFontSize() {
+      const html = document.documentElement;
+      const currentSize = html.className;
+      let newSize = currentSize === '' ? 'font-large' : currentSize === 'font-large' ? 'font-xlarge' : '';
+      html.className = newSize;
+      localStorage.setItem('fontSize', newSize);
+    }
+
+    function toggleTextToSpeech() {
+      const btn = document.getElementById('text-to-speech-btn');
+      const isActive = btn.getAttribute('aria-pressed') === 'true';
+      btn.setAttribute('aria-pressed', !isActive);
+      localStorage.setItem('textToSpeech', !isActive);
+    }
+
+    function toggleEasyLanguage() {
+      const isActive = document.documentElement.getAttribute('data-easy-language') === 'true';
+      const newState = !isActive;
+      document.documentElement.setAttribute('data-easy-language', newState);
+      localStorage.setItem('easyLanguage', newState);
+      document.getElementById('easy-language-btn').setAttribute('aria-pressed', newState);
+    }
+
+    function loadFontSizePreference() {
+      const savedSize = localStorage.getItem('fontSize');
+      if (savedSize) document.documentElement.className = savedSize;
+    }
+
+    function loadEasyLanguagePreference() {
+      if (localStorage.getItem('easyLanguage') === 'true') {
+        document.documentElement.setAttribute('data-easy-language', 'true');
+      }
+    }
+
+    // Init
+    loadFontSizePreference();
+    loadEasyLanguagePreference();
+    
+    fetch('/api/auth/me')
+      .then(r => r.json())
+      .then(data => {
+        document.getElementById('user-name').textContent = `${data.user.firstname} ${data.user.lastname}`;
+        loadSurveys();
+      })
+      .catch(() => window.location.href = '/');
+  </script>
+</body>
+</html>

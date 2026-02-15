@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meldungen - Oberlinhaus Werkstatt Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <a href="#main-content" class="skip-to-main">Zum Hauptinhalt springen</a>
+
+  <header role="banner">
+    <div class="container">
+      <div class="header-logo">
+        <div class="logo-circle">OH</div>
+        <div class="header-content">
+          <h1>Oberlinhaus Werkstatt</h1>
+          <p class="header-subtitle">Einfach. Übersichtlich. Barrierefrei.</p>
+        </div>
+      </div>
+      <div class="header-user">
+        <span id="user-name"></span>
+        <button class="btn btn-secondary" id="logout-btn">Abmelden</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <div class="container" style="max-width: 900px;">
+      <h2>📢 Meldungen & Nachrichten</h2>
+      <p>Wichtige Ankündigungen und News vom Oberlinhaus.</p>
+
+      <div id="announcements-loading" style="text-align: center; padding: 2rem;">
+        <div class="spinner"></div>
+        <p>Wird geladen...</p>
+      </div>
+
+      <div id="announcements-container" style="display: none;"></div>
+      <div id="announcements-error" style="display: none;" class="alert alert-error"></div>
+    </div>
+  </main>
+
+  <footer class="accessibility-footer">
+    <button id="font-size-btn" aria-label="Schriftgröße ändern">🔤 A</button>
+    <button id="text-to-speech-btn" aria-label="Vorlesen" aria-pressed="false">🔊</button>
+    <button id="easy-language-btn" aria-label="Leichte Sprache" aria-pressed="false">ABC</button>
+  </footer>
+
+  <script src="/js/accessibility.js" type="module"></script>
+  <script src="/js/easy-language.js" type="module"></script>
+
+  <script>
+    async function loadAnnouncements() {
+      try {
+        const response = await fetch('/api/announcements');
+        const announcements = await response.json();
+
+        const container = document.getElementById('announcements-container');
+        container.innerHTML = '';
+
+        if (announcements.length === 0) {
+          container.innerHTML = '<p>Keine Meldungen vorhanden.</p>';
+        } else {
+          announcements.forEach(announcement => {
+            const isImportant = announcement.is_important;
+            const cardEl = document.createElement('div');
+            cardEl.className = `card ${isImportant ? 'important' : ''}`;
+            cardEl.style.borderColor = isImportant ? '#b61b3e' : '#ddd';
+            cardEl.style.borderWidth = isImportant ? '3px' : '2px';
+            
+            const date = new Date(announcement.posted_at).toLocaleDateString('de-DE', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            });
+
+            cardEl.innerHTML = `
+              ${isImportant ? '<div style="background: #b61b3e; color: white; padding: 0.5rem; margin: -1.5rem -1.5rem 1rem -1.5rem; border-radius: 4px 4px 0 0;">⚠️ WICHTIG</div>' : ''}
+              <h3 class="card-title">${announcement.title}</h3>
+              <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">📅 ${date}</p>
+              <div>${announcement.content}</div>
+            `;
+
+            container.appendChild(cardEl);
+          });
+        }
+
+        document.getElementById('announcements-loading').style.display = 'none';
+        container.style.display = 'block';
+      } catch (error) {
+        document.getElementById('announcements-loading').style.display = 'none';
+        showError('Fehler beim Laden: ' + error.message);
+      }
+    }
+
+    function showError(message) {
+      const errorEl = document.getElementById('announcements-error');
+      errorEl.textContent = message;
+      errorEl.style.display = 'block';
+    }
+
+    async function logout() {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      window.location.href = '/';
+    }
+
+    document.getElementById('logout-btn').addEventListener('click', logout);
+    document.getElementById('font-size-btn').addEventListener('click', toggleFontSize);
+    document.getElementById('text-to-speech-btn').addEventListener('click', toggleTextToSpeech);
+    document.getElementById('easy-language-btn').addEventListener('click', toggleEasyLanguage);
+
+    function toggleFontSize() {
+      const html = document.documentElement;
+      const currentSize = html.className;
+      let newSize = currentSize === '' ? 'font-large' : currentSize === 'font-large' ? 'font-xlarge' : '';
+      html.className = newSize;
+      localStorage.setItem('fontSize', newSize);
+    }
+
+    function toggleTextToSpeech() {
+      const btn = document.getElementById('text-to-speech-btn');
+      const isActive = btn.getAttribute('aria-pressed') === 'true';
+      btn.setAttribute('aria-pressed', !isActive);
+      localStorage.setItem('textToSpeech', !isActive);
+    }
+
+    function toggleEasyLanguage() {
+      const isActive = document.documentElement.getAttribute('data-easy-language') === 'true';
+      const newState = !isActive;
+      document.documentElement.setAttribute('data-easy-language', newState);
+      localStorage.setItem('easyLanguage', newState);
+      document.getElementById('easy-language-btn').setAttribute('aria-pressed', newState);
+    }
+
+    function loadFontSizePreference() {
+      const savedSize = localStorage.getItem('fontSize');
+      if (savedSize) document.documentElement.className = savedSize;
+    }
+
+    function loadEasyLanguagePreference() {
+      if (localStorage.getItem('easyLanguage') === 'true') {
+        document.documentElement.setAttribute('data-easy-language', 'true');
+      }
+    }
+
+    // Init
+    loadFontSizePreference();
+    loadEasyLanguagePreference();
+    
+    fetch('/api/auth/me')
+      .then(r => r.json())
+      .then(data => {
+        document.getElementById('user-name').textContent = `${data.user.firstname} ${data.user.lastname}`;
+        loadAnnouncements();
+      })
+      .catch(() => window.location.href = '/');
+  </script>
+</body>
+</html>

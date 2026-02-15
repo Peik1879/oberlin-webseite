@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Oberlinhaus Werkstatt Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <a href="#main-content" class="skip-to-main">Zum Hauptinhalt springen</a>
+
+  <header role="banner">
+    <div class="container">
+      <div class="header-logo">
+        <div class="logo-circle">OBERLINHAUS</div>
+        <div class="header-content">
+          <h1>Oberlinhaus Werkstatt</h1>
+          <p class="header-subtitle">Einfach. Übersichtlich. Barrierefrei.</p>
+        </div>
+      </div>
+      <div class="header-user">
+        <span id="user-name"></span>
+        <button class="btn btn-secondary" id="logout-btn">Abmelden</button>
+      </div>
+    </div>
+  </header>
+
+  <nav role="navigation" aria-label="Hauptnavigation">
+    <div class="container" style="display: flex; gap: 1rem; padding: 1rem; background: #f5f5f5; border-bottom: 1px solid #ddd; overflow-x: auto; flex-wrap: wrap;">
+      <a href="/dashboard.html" class="btn" style="background: #b61b3e; color: white;">Dashboard</a>
+      <a href="/meal-plans.html" class="btn btn-outline">🍽️ Speiseplan</a>
+      <a href="/attendance.html" class="btn btn-outline">📝 Anwesenheit</a>
+      <a href="/announcements.html" class="btn btn-outline">📢 Meldungen</a>
+      <a href="/surveys.html" class="btn btn-outline">🗳️ Umfragen</a>
+      <a href="/offers.html" class="btn btn-outline">🎯 Angebote</a>
+      <a href="/trainings.html" class="btn btn-outline">🎓 Kurse</a>
+      <a href="/tickets.html" class="btn btn-outline">🚌 Fahrkarten</a>
+      <a href="/documents.html" class="btn btn-outline">📄 Dokumente</a>
+      <a href="/jobs.html" class="btn btn-outline">💼 Jobs</a>
+    </div>
+  </nav>
+
+  <main id="main-content">
+    <div class="container">
+      <h2>Willkommen!</h2>
+      <p>Wähle ein Thema aus der Navigation oben aus oder klicke auf eine der Kacheln unten.</p>
+
+      <!-- Ankündigungen Banner -->
+      <div id="announcements-banner" style="margin-bottom: 2rem;"></div>
+
+      <!-- Schnell-Zugriff Kacheln -->
+      <div class="grid">
+        
+        <!-- Speiseplan -->
+        <a href="/meal-plans.html" class="card" role="button">
+          <span class="card-emoji">🍽️</span>
+          <h3 class="card-title" data-easy-text="Was gibt es zu essen?" data-normal-text="Speiseplan">Speiseplan</h3>
+          <p class="card-description">Diese Woche's Menü sehen</p>
+        </a>
+
+        <!-- Öffnungszeiten -->
+        <a href="/" class="card" role="button">
+          <span class="card-emoji">⏰</span>
+          <h3 class="card-title" data-easy-text="Wann ist offen?" data-normal-text="Öffnungszeiten">Öffnungszeiten</h3>
+          <p class="card-description">Wann ist die Werkstatt auf?</p>
+        </a>
+
+        <!-- Anwesenheit -->
+        <a href="/attendance.html" class="card" role="button">
+          <span class="card-emoji">📝</span>
+          <h3 class="card-title" data-easy-text="Ich bin da oder nicht da" data-normal-text="Anwesenheit">Anwesenheit</h3>
+          <p class="card-description">Deine Anwesenheit eintragen</p>
+        </a>
+
+        <!-- Umfragen -->
+        <a href="/surveys.html" class="card" role="button">
+          <span class="card-emoji">🗳️</span>
+          <h3 class="card-title" data-easy-text="Abstimmung" data-normal-text="Umfragen">Umfragen</h3>
+          <p class="card-description">Abstimmen und Ergebnisse sehen</p>
+        </a>
+
+        <!-- Angebote -->
+        <a href="/offers.html" class="card" role="button">
+          <span class="card-emoji">🎯</span>
+          <h3 class="card-title" data-easy-text="Was kann ich machen?" data-normal-text="Angebote">Angebote</h3>
+          <p class="card-description">Freizeitangebote & Aktivitäten</p>
+        </a>
+
+        <!-- Kurse -->
+        <a href="/trainings.html" class="card" role="button">
+          <span class="card-emoji">🎓</span>
+          <h3 class="card-title" data-easy-text="Kurse" data-normal-text="Weiterbildungen">Weiterbildungen</h3>
+          <p class="card-description">Schulungen & Kurse</p>
+        </a>
+
+        <!-- Fahrkarten -->
+        <a href="/tickets.html" class="card" role="button">
+          <span class="card-emoji">🚌</span>
+          <h3 class="card-title" data-easy-text="Meine Tickets" data-normal-text="Fahrkarten">Fahrkarten</h3>
+          <p class="card-description">Monatstickets hochladen</p>
+        </a>
+
+        <!-- Dokumente -->
+        <a href="/documents.html" class="card" role="button">
+          <span class="card-emoji">📄</span>
+          <h3 class="card-title" data-easy-text="Meine Dokumente" data-normal-text="Lebenslauf">Lebenslauf</h3>
+          <p class="card-description">Bewerbungsdokumente speichern</p>
+        </a>
+
+        <!-- Jobs -->
+        <a href="/jobs.html" class="card" role="button">
+          <span class="card-emoji">💼</span>
+          <h3 class="card-title" data-easy-text="Freie Stellen" data-normal-text="Jobbörse">Jobbörse</h3>
+          <p class="card-description">Offene Positionen sehen</p>
+        </a>
+
+        <!-- Meldungen -->
+        <a href="/announcements.html" class="card" role="button">
+          <span class="card-emoji">📢</span>
+          <h3 class="card-title" data-easy-text="Nachrichten" data-normal-text="Meldungen">Meldungen</h3>
+          <p class="card-description">Wichtige News & Ankündigungen</p>
+        </a>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="accessibility-footer">
+    <button id="font-size-btn" aria-label="Schriftgröße ändern">🔤 A</button>
+    <button id="text-to-speech-btn" aria-label="Vorlesen" aria-pressed="false">🔊</button>
+    <button id="easy-language-btn" aria-label="Leichte Sprache" aria-pressed="false">ABC</button>
+  </footer>
+
+  <script src="/js/accessibility.js" type="module"></script>
+  <script src="/js/easy-language.js" type="module"></script>
+  
+  <script>
+    // Accessibility Buttons
+    document.getElementById('font-size-btn').addEventListener('click', toggleFontSize);
+    document.getElementById('text-to-speech-btn').addEventListener('click', toggleTextToSpeech);
+    document.getElementById('easy-language-btn').addEventListener('click', toggleEasyLanguage);
+
+    document.getElementById('logout-btn').addEventListener('click', logout);
+
+    async function loadDashboard() {
+      // User Info laden
+      try {
+        const response = await fetch('/api/auth/me');
+        const data = await response.json();
+        document.getElementById('user-name').textContent = `${data.user.firstname} ${data.user.lastname}`;
+
+        // Meldungen laden (Banner)
+        loadAnnouncementsBanner();
+      } catch (error) {
+        console.error('Error:', error);
+        window.location.href = '/';
+      }
+    }
+
+    async function loadAnnouncementsBanner() {
+      try {
+        const response = await fetch('/api/announcements');
+        const announcements = await response.json();
+        
+        const importantAnnouncements = announcements.filter(a => a.is_important);
+        const bannerEl = document.getElementById('announcements-banner');
+
+        if (importantAnnouncements.length > 0) {
+          const announcement = importantAnnouncements[0];
+          bannerEl.innerHTML = `
+            <div class="alert alert-info">
+              <strong>📢 ${announcement.title}:</strong><br>
+              ${announcement.content}
+            </div>
+          `;
+        }
+      } catch (error) {
+        console.error('Error loading announcements:', error);
+      }
+    }
+
+    async function logout() {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      window.location.href = '/';
+    }
+
+    function toggleFontSize() {
+      const html = document.documentElement;
+      const currentSize = html.className;
+
+      let newSize = '';
+      if (currentSize === '') {
+        newSize = 'font-large';
+      } else if (currentSize === 'font-large') {
+        newSize = 'font-xlarge';
+      } else {
+        newSize = '';
+      }
+
+      html.className = newSize;
+      localStorage.setItem('fontSize', newSize);
+    }
+
+    function toggleTextToSpeech() {
+      const btn = document.getElementById('text-to-speech-btn');
+      const isActive = btn.getAttribute('aria-pressed') === 'true';
+      btn.setAttribute('aria-pressed', !isActive);
+      localStorage.setItem('textToSpeech', !isActive);
+    }
+
+    function toggleEasyLanguage() {
+      const isActive = document.documentElement.getAttribute('data-easy-language') === 'true';
+      const newState = !isActive;
+      document.documentElement.setAttribute('data-easy-language', newState);
+      localStorage.setItem('easyLanguage', newState);
+
+      // Texte aktualisieren
+      const btn = document.getElementById('easy-language-btn');
+      btn.setAttribute('aria-pressed', newState);
+    }
+
+    // Init
+    loadFontSizePreference();
+    loadEasyLanguagePreference();
+    loadDashboard();
+
+    function loadFontSizePreference() {
+      const savedSize = localStorage.getItem('fontSize');
+      if (savedSize) {
+        document.documentElement.className = savedSize;
+      }
+    }
+
+    function loadEasyLanguagePreference() {
+      const savedPref = localStorage.getItem('easyLanguage');
+      if (savedPref === 'true') {
+        document.documentElement.setAttribute('data-easy-language', 'true');
+      }
+    }
+  </script>
+</body>
+</html>

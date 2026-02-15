@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oberlinhaus Werkstatt Portal - Anmelden</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <a href="#main-content" class="skip-to-main">Zum Hauptinhalt springen</a>
+
+  <header role="banner">
+    <div class="container">
+      <div class="header-logo">
+        <div class="logo-circle">OBERLINHAUS</div>
+        <div class="header-content">
+          <h1>Oberlinhaus Werkstatt</h1>
+          <p class="header-subtitle">Einfach. Übersichtlich. Barrierefrei.</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <div class="container">
+      <div style="max-width: 500px; margin: 3rem auto;">
+        
+        <!-- Fehler-Meldung -->
+        <div id="error-message" class="alert alert-error" style="display: none;"></div>
+
+        <div class="card">
+          <h2 style="text-align: center; margin-top: 0;">Anmelden</h2>
+
+          <!-- PIN Login Tab -->
+          <div id="login-pin-form">
+            <form onsubmit="handleLoginPin(event)">
+              <div>
+                <label for="username">Benutzername</label>
+                <input type="text" id="username" name="username" required 
+                       aria-required="true" autofocus>
+                <small style="display: block; margin-top: 4px; color: #666;">
+                  z.B. max.mueller
+                </small>
+              </div>
+
+              <div>
+                <label for="pin">PIN-Code (4 Ziffern)</label>
+                <input type="password" id="pin" name="pin" 
+                       pattern="[0-9]{4}" maxlength="4" required
+                       aria-required="true"
+                       aria-describedby="pin-help">
+                <small id="pin-help" style="display: block; margin-top: 4px; color: #666;">
+                  Wie am Geldautomaten
+                </small>
+              </div>
+
+              <button type="submit" class="btn">Anmelden</button>
+            </form>
+
+            <p style="text-align: center; margin-top: 2rem; color: #666;">
+              <button type="button" onclick="switchToEmailLogin()" style="background: none; border: none; color: #b61b3e; text-decoration: underline; cursor: pointer; font-size: 0.95rem;">
+                Mit Email anmelden
+              </button>
+            </p>
+          </div>
+
+          <!-- Email Login Tab -->
+          <div id="login-email-form" style="display: none;">
+            <form onsubmit="handleLoginEmail(event)">
+              <div>
+                <label for="email">Email-Adresse</label>
+                <input type="email" id="email" name="email" required 
+                       aria-required="true">
+              </div>
+
+              <div>
+                <label for="password">Passwort</label>
+                <input type="password" id="password" name="password" required
+                       aria-required="true">
+              </div>
+
+              <button type="submit" class="btn">Anmelden</button>
+            </form>
+
+            <p style="text-align: center; margin-top: 2rem; color: #666;">
+              <button type="button" onclick="switchToPinLogin()" style="background: none; border: none; color: #b61b3e; text-decoration: underline; cursor: pointer; font-size: 0.95rem;">
+                Mit PIN anmelden
+              </button>
+            </p>
+          </div>
+
+          <!-- Demo Credentials Info -->
+          <div class="alert alert-info" style="margin-top: 2rem;">
+            <strong>🔓 Demo:</strong> Benutzer: <code>admin</code>, PIN: <code>0000</code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="accessibility-footer">
+    <button id="font-size-btn" aria-label="Schriftgröße ändern">🔤 A</button>
+    <button id="text-to-speech-btn" aria-label="Vorlesen" aria-pressed="false">🔊</button>
+    <button id="easy-language-btn" aria-label="Leichte Sprache" aria-pressed="false">ABC</button>
+  </footer>
+
+  <script src="/js/accessibility.js" type="module"></script>
+  <script src="/js/easy-language.js" type="module"></script>
+  
+  <script>
+    function switchToEmailLogin() {
+      document.getElementById('login-pin-form').style.display = 'none';
+      document.getElementById('login-email-form').style.display = 'block';
+      document.getElementById('email').focus();
+    }
+
+    function switchToPinLogin() {
+      document.getElementById('login-email-form').style.display = 'none';
+      document.getElementById('login-pin-form').style.display = 'block';
+      document.getElementById('username').focus();
+    }
+
+    async function handleLoginPin(event) {
+      event.preventDefault();
+      const username = document.getElementById('username').value;
+      const pin = document.getElementById('pin').value;
+
+      try {
+        const response = await fetch('/api/auth/login-pin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, pin })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          // Success
+          window.location.href = '/dashboard.html';
+        } else {
+          showError(data.error || 'Login fehlgeschlagen');
+        }
+      } catch (error) {
+        showError('Ein Fehler ist aufgetreten');
+        console.error(error);
+      }
+    }
+
+    async function handleLoginEmail(event) {
+      event.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          window.location.href = '/dashboard.html';
+        } else {
+          showError(data.error || 'Login fehlgeschlagen');
+        }
+      } catch (error) {
+        showError('Ein Fehler ist aufgetreten');
+        console.error(error);
+      }
+    }
+
+    function showError(message) {
+      const errorEl = document.getElementById('error-message');
+      errorEl.textContent = message;
+      errorEl.style.display = 'block';
+      errorEl.focus();
+    }
+
+    // Auto-Fokus Fehler Reset
+    document.getElementById('username').addEventListener('focus', () => {
+      document.getElementById('error-message').style.display = 'none';
+    });
+    document.getElementById('email').addEventListener('focus', () => {
+      document.getElementById('error-message').style.display = 'none';
+    });
+  </script>
+</body>
+</html>

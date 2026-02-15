@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Server Test</title>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #f5f5f5; }
+    .test { background: white; padding: 20px; margin: 10px 0; border-radius: 8px; border-left: 4px solid #b61b3e; }
+    .success { border-color: green; }
+    .error { border-color: red; }
+    button { background: #b61b3e; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 4px; font-size: 16px; }
+    button:hover { background: #950f2e; }
+  </style>
+</head>
+<body>
+  <h1>🔍 Server Test</h1>
+  <button onclick="runTests()">Tests starten</button>
+  <div id="results"></div>
+
+  <script>
+    async function runTests() {
+      const results = document.getElementById('results');
+      results.innerHTML = '<h2>Teste...</h2>';
+
+      // Test 1: Server erreichbar?
+      try {
+        const res1 = await fetch('/');
+        results.innerHTML += `<div class="test success">✅ Server läuft (Status: ${res1.status})</div>`;
+      } catch (e) {
+        results.innerHTML += `<div class="test error">❌ Server nicht erreichbar: ${e.message}</div>`;
+        return;
+      }
+
+      // Test 2: API Route erreichbar?
+      try {
+        const res2 = await fetch('/api/auth/session');
+        const data2 = await res2.json();
+        results.innerHTML += `<div class="test success">✅ API Route funktioniert</div>`;
+      } catch (e) {
+        results.innerHTML += `<div class="test error">❌ API Route fehlt: ${e.message}</div>`;
+      }
+
+      // Test 3: Login API testen
+      try {
+        const res3 = await fetch('/api/auth/login-pin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: 'admin', pin: '0000' })
+        });
+        const data3 = await res3.json();
+        
+        if (res3.ok) {
+          results.innerHTML += `<div class="test success">✅ Login API funktioniert! User: ${data3.user?.username}</div>`;
+        } else {
+          results.innerHTML += `<div class="test error">❌ Login fehlgeschlagen: ${data3.error}</div>`;
+        }
+      } catch (e) {
+        results.innerHTML += `<div class="test error">❌ Login API Fehler: ${e.message}</div>`;
+      }
+
+      results.innerHTML += '<h2>✅ Tests abgeschlossen!</h2>';
+    }
+  </script>
+</body>
+</html>

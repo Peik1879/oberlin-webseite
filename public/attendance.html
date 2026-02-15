@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anwesenheit - Oberlinhaus Werkstatt Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <a href="#main-content" class="skip-to-main">Zum Hauptinhalt springen</a>
+
+  <header role="banner">
+    <div class="container">
+      <div class="header-logo">
+        <div class="logo-circle">OH</div>
+        <div class="header-content">
+          <h1>Oberlinhaus Werkstatt</h1>
+          <p class="header-subtitle">Einfach. Übersichtlich. Barrierefrei.</p>
+        </div>
+      </div>
+      <div class="header-user">
+        <span id="user-name"></span>
+        <button class="btn btn-secondary" id="logout-btn">Abmelden</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <div class="container" style="max-width: 800px;">
+      <h2>📝 Anwesenheit eintragen</h2>
+      <p>Sag uns, ob du heute kommst oder nicht.</p>
+
+      <div class="card">
+        <form onsubmit="handleSubmitAttendance(event)">
+          <div>
+            <label for="date">📅 Datum</label>
+            <input type="date" id="date" name="date" required aria-required="true">
+          </div>
+
+          <div>
+            <label for="status">Status</label>
+            <select id="status" name="status" required aria-required="true">
+              <option value="present">✅ Anwesend</option>
+              <option value="sick">🤒 Krank</option>
+              <option value="vacation">🏖️ Urlaub</option>
+              <option value="other">❓ Sonstiges</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="notes">Notiz (optional)</label>
+            <textarea id="notes" name="notes" placeholder="z.B. Arzttermin, später kommen..."></textarea>
+          </div>
+
+          <button type="submit" class="btn">Speichern</button>
+        </form>
+
+        <div id="success-message" class="alert alert-success" style="display: none; margin-top: 1rem;"></div>
+        <div id="error-message" class="alert alert-error" style="display: none; margin-top: 1rem;"></div>
+      </div>
+
+      <h3 style="margin-top: 2rem;">Meine letzten Einträge</h3>
+      <div id="attendance-history" class="grid"></div>
+      <div id="loading" style="text-align: center;"><div class="spinner"></div></div>
+    </div>
+  </main>
+
+  <footer class="accessibility-footer">
+    <button id="font-size-btn" aria-label="Schriftgröße ändern">🔤 A</button>
+    <button id="text-to-speech-btn" aria-label="Vorlesen" aria-pressed="false">🔊</button>
+    <button id="easy-language-btn" aria-label="Leichte Sprache" aria-pressed="false">ABC</button>
+  </footer>
+
+  <script src="/js/accessibility.js" type="module"></script>
+  <script src="/js/easy-language.js" type="module"></script>
+
+  <script>
+    // Set heute als default Datum
+    document.getElementById('date').valueAsDate = new Date();
+
+    async function handleSubmitAttendance(event) {
+      event.preventDefault();
+      const date = document.getElementById('date').value;
+      const status = document.getElementById('status').value;
+      const notes = document.getElementById('notes').value;
+
+      try {
+        const response = await fetch('/api/attendance', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ date, status, notes })
+        });
+
+        if (response.ok) {
+          showSuccess('Anwesenheit eingetragen!');
+          document.getElementById('notes').value = '';
+          loadAttendanceHistory();
+        } else {
+          const error = await response.json();
+          showError(error.error);
+        }
+      } catch (error) {
+        showError('Fehler beim Speichern: ' + error.message);
+      }
+    }
+
+    async function loadAttendanceHistory() {
+      try {
+        const response = await fetch('/api/attendance/me');
+        const records = await response.json();
+
+        const historyEl = document.getElementById('attendance-history');
+        historyEl.innerHTML = '';
+        document.getElementById('loading').style.display = 'none';
+
+        if (records.length === 0) {
+          historyEl.innerHTML = '<p>Keine Einträge vorhanden</p>';
+          return;
+        }
+
+        const statusTexts = {
+          'present': '✅ Anwesend',
+          'sick': '🤒 Krank',
+          'vacation': '🏖️ Urlaub',
+          'other': '❓ Sonstiges'
+        };
+
+        records.forEach(record => {
+          historyEl.innerHTML += `
+            <div class="card">
+              <h4>${new Date(record.date).toLocaleDateString('de-DE')}</h4>
+              <p>${statusTexts[record.status]}</p>
+              ${record.notes ? `<small>${record.notes}</small>` : ''}
+            </div>
+          `;
+        });
+      } catch (error) {
+        document.getElementById('loading').innerHTML = `<div class="alert alert-error">Fehler: ${error.message}</div>`;
+      }
+    }
+
+    function showSuccess(message) {
+      const el = document.getElementById('success-message');
+      el.textContent = message;
+      el.style.display = 'block';
+      document.getElementById('error-message').style.display = 'none';
+    }
+
+    function showError(message) {
+      const el = document.getElementById('error-message');
+      el.textContent = message;
+      el.style.display = 'block';
+      document.getElementById('success-message').style.display = 'none';
+    }
+
+    async function logout() {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      window.location.href = '/';
+    }
+
+    document.getElementById('logout-btn').addEventListener('click', logout);
+    document.getElementById('font-size-btn').addEventListener('click', toggleFontSize);
+    document.getElementById('text-to-speech-btn').addEventListener('click', toggleTextToSpeech);
+    document.getElementById('easy-language-btn').addEventListener('click', toggleEasyLanguage);
+
+    function toggleFontSize() {
+      const html = document.documentElement;
+      const currentSize = html.className;
+      let newSize = currentSize === '' ? 'font-large' : currentSize === 'font-large' ? 'font-xlarge' : '';
+      html.className = newSize;
+      localStorage.setItem('fontSize', newSize);
+    }
+
+    function toggleTextToSpeech() {
+      const btn = document.getElementById('text-to-speech-btn');
+      const isActive = btn.getAttribute('aria-pressed') === 'true';
+      btn.setAttribute('aria-pressed', !isActive);
+      localStorage.setItem('textToSpeech', !isActive);
+    }
+
+    function toggleEasyLanguage() {
+      const isActive = document.documentElement.getAttribute('data-easy-language') === 'true';
+      const newState = !isActive;
+      document.documentElement.setAttribute('data-easy-language', newState);
+      localStorage.setItem('easyLanguage', newState);
+      document.getElementById('easy-language-btn').setAttribute('aria-pressed', newState);
+    }
+
+    function loadFontSizePreference() {
+      const savedSize = localStorage.getItem('fontSize');
+      if (savedSize) document.documentElement.className = savedSize;
+    }
+
+    function loadEasyLanguagePreference() {
+      if (localStorage.getItem('easyLanguage') === 'true') {
+        document.documentElement.setAttribute('data-easy-language', 'true');
+      }
+    }
+
+    // Init
+    loadFontSizePreference();
+    loadEasyLanguagePreference();
+    
+    fetch('/api/auth/me')
+      .then(r => r.json())
+      .then(data => {
+        document.getElementById('user-name').textContent = `${data.user.firstname} ${data.user.lastname}`;
+        loadAttendanceHistory();
+      })
+      .catch(() => window.location.href = '/');
+  </script>
+</body>
+</html>
