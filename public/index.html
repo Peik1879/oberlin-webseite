@@ -120,55 +120,14 @@
       document.getElementById('username').focus();
     }
 
-    async function handleLoginPin(event) {
+    function handleLoginPin(event) {
       event.preventDefault();
-      const username = document.getElementById('username').value;
-      const pin = document.getElementById('pin').value;
-
-      try {
-        const response = await fetch('/api/auth/login-pin', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, pin })
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-          // Success
-          window.location.href = 'dashboard.html';
-        } else {
-          showError(data.error || 'Login fehlgeschlagen');
-        }
-      } catch (error) {
-        showError('Ein Fehler ist aufgetreten');
-        console.error(error);
-      }
+      window.location.href = 'dashboard.html';
     }
 
-    async function handleLoginEmail(event) {
+    function handleLoginEmail(event) {
       event.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-
-      try {
-        const response = await fetch('/api/auth/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-          window.location.href = 'dashboard.html';
-        } else {
-          showError(data.error || 'Login fehlgeschlagen');
-        }
-      } catch (error) {
-        showError('Ein Fehler ist aufgetreten');
-        console.error(error);
-      }
+      window.location.href = 'dashboard.html';
     }
 
     function showError(message) {
