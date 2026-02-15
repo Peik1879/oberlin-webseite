@@ -33,11 +33,10 @@
 
           <!-- PIN Login Tab -->
           <div id="login-pin-form">
-            <form onsubmit="handleLoginPin(event)">
+            <form onsubmit="handleLoginPin(event)" novalidate>
               <div>
                 <label for="username">Benutzername</label>
-                <input type="text" id="username" name="username" required 
-                       aria-required="true" autofocus>
+                  <input type="text" id="username" name="username" autofocus>
                 <small style="display: block; margin-top: 4px; color: #666;">
                   z.B. max.mueller
                 </small>
@@ -45,10 +44,9 @@
 
               <div>
                 <label for="pin">PIN-Code (4 Ziffern)</label>
-                <input type="password" id="pin" name="pin" 
-                       pattern="[0-9]{4}" maxlength="4" required
-                       aria-required="true"
-                       aria-describedby="pin-help">
+                  <input type="password" id="pin" name="pin" 
+                    pattern="[0-9]{4}" maxlength="4"
+                    aria-describedby="pin-help">
                 <small id="pin-help" style="display: block; margin-top: 4px; color: #666;">
                   Wie am Geldautomaten
                 </small>
@@ -66,17 +64,15 @@
 
           <!-- Email Login Tab -->
           <div id="login-email-form" style="display: none;">
-            <form onsubmit="handleLoginEmail(event)">
+            <form onsubmit="handleLoginEmail(event)" novalidate>
               <div>
                 <label for="email">Email-Adresse</label>
-                <input type="email" id="email" name="email" required 
-                       aria-required="true">
+                  <input type="email" id="email" name="email">
               </div>
 
               <div>
                 <label for="password">Passwort</label>
-                <input type="password" id="password" name="password" required
-                       aria-required="true">
+                  <input type="password" id="password" name="password">
               </div>
 
               <button type="submit" class="btn">Anmelden</button>
