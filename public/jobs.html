@@ -29,13 +29,14 @@
     <button id="font-size-btn">🔤 A</button><button id="text-to-speech-btn">🔊</button><button id="easy-language-btn">ABC</button>
   </footer>
   <script>
-    fetch('/api/auth/me').then(r => r.json()).then(d => document.getElementById('user-name').textContent = d.user.firstname).catch(() => location.href = 'index.html');
+    document.getElementById('user-name').textContent = 'Demo Nutzer';
     fetch('/api/jobs').then(r => r.json()).then(d => {
       const c = document.getElementById('jobs-container');
       d.forEach(j => c.innerHTML += `<div class="card"><h3>${j.title}</h3><p>${j.description}</p><p>⏱️ ${j.hours_per_week}h/Woche</p><button class="btn">Bewerben</button></div>`);
     });
-    document.getElementById('logout-btn').onclick = () => fetch('/api/auth/logout', {method: 'POST'}).then(() => location.href = 'index.html');
+    document.getElementById('logout-btn').onclick = () => location.href = 'index.html';
   </script>
 </body>
 </html>
+
 

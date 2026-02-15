@@ -31,13 +31,14 @@
     <button id="easy-language-btn">ABC</button>
   </footer>
   <script>
-    fetch('/api/auth/me').then(r => r.json()).then(d => document.getElementById('user-name').textContent = d.user.firstname).catch(() => location.href = 'index.html');
+    document.getElementById('user-name').textContent = 'Demo Nutzer';
     fetch('/api/trainings').then(r => r.json()).then(d => {
       const c = document.getElementById('trainings-container');
       d.forEach(t => c.innerHTML += `<div class="card"><h3>${t.title}</h3><p>${t.description}</p><button class="btn">Interesse anmelden</button></div>`);
     });
-    document.getElementById('logout-btn').onclick = () => fetch('/api/auth/logout', {method: 'POST'}).then(() => location.href = 'index.html');
+    document.getElementById('logout-btn').onclick = () => location.href = 'index.html';
   </script>
 </body>
 </html>
+
 

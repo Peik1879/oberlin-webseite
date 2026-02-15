@@ -153,8 +153,7 @@
       document.getElementById('success-message').style.display = 'none';
     }
 
-    async function logout() {
-      await fetch('/api/auth/logout', { method: 'POST' });
+    function logout() {
       window.location.href = 'index.html';
     }
 
@@ -201,14 +200,10 @@
     loadFontSizePreference();
     loadEasyLanguagePreference();
     
-    fetch('/api/auth/me')
-      .then(r => r.json())
-      .then(data => {
-        document.getElementById('user-name').textContent = `${data.user.firstname} ${data.user.lastname}`;
-        loadAttendanceHistory();
-      })
-      .catch(() => window.location.href = 'index.html');
+    document.getElementById('user-name').textContent = 'Demo Nutzer';
+    loadAttendanceHistory();
   </script>
 </body>
 </html>
+
 

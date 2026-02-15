@@ -107,8 +107,7 @@
       errorEl.style.display = 'block';
     }
 
-    async function logout() {
-      await fetch('/api/auth/logout', { method: 'POST' });
+    function logout() {
       window.location.href = 'index.html';
     }
 
@@ -121,14 +120,8 @@
     loadFontSizePreference();
     loadEasyLanguagePreference();
     
-    // Load user info
-    fetch('/api/auth/me')
-      .then(r => r.json())
-      .then(data => {
-        document.getElementById('user-name').textContent = `${data.user.firstname} ${data.user.lastname}`;
-        loadMealPlans();
-      })
-      .catch(() => window.location.href = 'index.html');
+    document.getElementById('user-name').textContent = 'Demo Nutzer';
+    loadMealPlans();
 
     function toggleFontSize() {
       const html = document.documentElement;
@@ -166,4 +159,5 @@
   </script>
 </body>
 </html>
+
 

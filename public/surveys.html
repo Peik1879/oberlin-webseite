@@ -169,8 +169,7 @@
       errorEl.style.display = 'block';
     }
 
-    async function logout() {
-      await fetch('/api/auth/logout', { method: 'POST' });
+    function logout() {
       window.location.href = 'index.html';
     }
 
@@ -217,14 +216,10 @@
     loadFontSizePreference();
     loadEasyLanguagePreference();
     
-    fetch('/api/auth/me')
-      .then(r => r.json())
-      .then(data => {
-        document.getElementById('user-name').textContent = `${data.user.firstname} ${data.user.lastname}`;
-        loadSurveys();
-      })
-      .catch(() => window.location.href = 'index.html');
+    document.getElementById('user-name').textContent = 'Demo Nutzer';
+    loadSurveys();
   </script>
 </body>
 </html>
+
 

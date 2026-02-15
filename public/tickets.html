@@ -39,14 +39,15 @@
     <button id="font-size-btn">🔤 A</button><button id="text-to-speech-btn">🔊</button><button id="easy-language-btn">ABC</button>
   </footer>
   <script>
-    fetch('/api/auth/me').then(r => r.json()).then(d => document.getElementById('user-name').textContent = d.user.firstname).catch(() => location.href = 'index.html');
+    document.getElementById('user-name').textContent = 'Demo Nutzer';
     fetch('/api/tickets/me').then(r => r.json()).then(d => {
       const c = document.getElementById('tickets-container');
       d.forEach(t => c.innerHTML += `<div class="card"><h4>${t.file_name}</h4><p>${t.month}/${t.year}</p></div>`);
     });
-    document.getElementById('logout-btn').onclick = () => fetch('/api/auth/logout', {method: 'POST'}).then(() => location.href = 'index.html');
+    document.getElementById('logout-btn').onclick = () => location.href = 'index.html';
     function handleUpload(e) { e.preventDefault(); alert('Upload-Feature wird noch implementiert'); }
   </script>
 </body>
 </html>
+
 
