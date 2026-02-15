@@ -142,45 +142,15 @@
 
     document.getElementById('logout-btn').addEventListener('click', logout);
 
-    async function loadDashboard() {
-      // User Info laden
-      try {
-        const response = await fetch('/api/auth/me');
-        const data = await response.json();
-        document.getElementById('user-name').textContent = `${data.user.firstname} ${data.user.lastname}`;
-
-        // Meldungen laden (Banner)
-        loadAnnouncementsBanner();
-      } catch (error) {
-        console.error('Error:', error);
-        window.location.href = 'index.html';
+    function loadDashboard() {
+      document.getElementById('user-name').textContent = 'Demo Nutzer';
+      const bannerEl = document.getElementById('announcements-banner');
+      if (bannerEl) {
+        bannerEl.style.display = 'none';
       }
     }
 
-    async function loadAnnouncementsBanner() {
-      try {
-        const response = await fetch('/api/announcements');
-        const announcements = await response.json();
-        
-        const importantAnnouncements = announcements.filter(a => a.is_important);
-        const bannerEl = document.getElementById('announcements-banner');
-
-        if (importantAnnouncements.length > 0) {
-          const announcement = importantAnnouncements[0];
-          bannerEl.innerHTML = `
-            <div class="alert alert-info">
-              <strong>📢 ${announcement.title}:</strong><br>
-              ${announcement.content}
-            </div>
-          `;
-        }
-      } catch (error) {
-        console.error('Error loading announcements:', error);
-      }
-    }
-
-    async function logout() {
-      await fetch('/api/auth/logout', { method: 'POST' });
+    function logout() {
       window.location.href = 'index.html';
     }
 
