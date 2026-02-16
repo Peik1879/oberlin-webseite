@@ -601,7 +601,11 @@ textarea {
   }
 
   header {
-    display: none;
+    display: none !important;
+  }
+
+  .hero {
+    display: none !important;
   }
 
   .hamburger-btn {
