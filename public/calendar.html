@@ -116,9 +116,9 @@
 
     .day-bar-fill {
       height: 100%;
-      background: linear-gradient(90deg, #d32f2f 0%, #ffa726 50%, #4caf50 100%);
       width: 0%;
-      transition: width 0.3s ease;
+      transition: width 1.5s ease, background-color 1.5s ease;
+      border-radius: 2px;
     }
 
     .tasks-section h3 {
@@ -231,9 +231,9 @@
 
     .progress-bar-fill {
       height: 100%;
-      background: linear-gradient(90deg, #d32f2f 0%, #ffa726 50%, #4caf50 100%);
       width: 0%;
-      transition: width 0.3s ease;
+      transition: width 1.5s ease, background-color 1.5s ease;
+      border-radius: 4px;
     }
 
     .progress-text {
@@ -499,6 +499,10 @@
         { id: 4, text: 'Werkstatt aufräumen', completed: true },
         { id: 5, text: 'Bericht schreiben', completed: false }
       ],
+      '2026-02-16': [
+        { id: 7, text: 'Projekt Vortrag rocken', completed: false },
+        { id: 8, text: 'Meinem Freund sagen er ist toll', completed: false }
+      ],
       '2026-02-20': [
         { id: 6, text: 'Einkaufen gehen', completed: false }
       ]
@@ -511,6 +515,27 @@
 
     function getDateKey(date) {
       return date.toISOString().split('T')[0];
+    }
+
+    function getColorForProgress(percentage) {
+      // 0% = kräftiges Rot, 50% = kräftiges Gelb, 100% = kräftiges Grün
+      let red, green, blue;
+      
+      if (percentage <= 50) {
+        // Rot zu Gelb: 0% - 50%
+        const ratio = percentage / 50;
+        red = 255;
+        green = Math.round(0 + (220 - 0) * ratio);
+        blue = 0;
+      } else {
+        // Gelb zu Grün: 50% - 100%
+        const ratio = (percentage - 50) / 50;
+        red = Math.round(255 + (0 - 255) * ratio);
+        green = 220;
+        blue = Math.round(0 + (0 - 0) * ratio);
+      }
+      
+      return `rgb(${red}, ${green}, ${blue})`;
     }
 
     function renderCalendar() {
@@ -570,6 +595,7 @@
         const fillEl = document.createElement('div');
         fillEl.className = 'day-bar-fill';
         fillEl.style.width = fillPercent + '%';
+        fillEl.style.backgroundColor = getColorForProgress(fillPercent);
         barEl.appendChild(fillEl);
         dayEl.appendChild(barEl);
 
@@ -683,6 +709,7 @@
       const percentage = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
       progressFill.style.width = percentage + '%';
+      progressFill.style.backgroundColor = getColorForProgress(percentage);
       progressText.textContent = `${completedCount} von ${totalCount} Aufgaben erledigt (${percentage}%)`;
     }
 

@@ -52,10 +52,35 @@
   <script src="js/easy-language.js" type="module"></script>
 
   <script>
+    // Demo-Ankündigungen
+    const demoAnnouncements = [
+      {
+        id: 1,
+        title: 'Nachricht vom Entwickler',
+        content: 'Ich wünsche euch einen wunderschönen Tag',
+        posted_at: new Date().toISOString(),
+        is_important: false
+      },
+      {
+        id: 2,
+        title: 'Werkstatt Wartung',
+        content: 'Die Werkstatt wird am Freitag von 14:00-16:00 Uhr für Wartungsarbeiten geschlossen.',
+        posted_at: new Date(Date.now() - 86400000).toISOString(),
+        is_important: true
+      },
+      {
+        id: 3,
+        title: 'Neue Speiseplan',
+        content: 'Der Speiseplan für nächste Woche ist jetzt verfügbar. Schau ihn dir an!',
+        posted_at: new Date(Date.now() - 172800000).toISOString(),
+        is_important: false
+      }
+    ];
+
     async function loadAnnouncements() {
       try {
-        const response = await fetch('/api/announcements');
-        const announcements = await response.json();
+        // Verwende Demo-Daten
+        const announcements = demoAnnouncements;
 
         const container = document.getElementById('announcements-container');
         container.innerHTML = '';
@@ -90,6 +115,7 @@
         document.getElementById('announcements-loading').style.display = 'none';
         container.style.display = 'block';
       } catch (error) {
+        console.error('Error:', error);
         document.getElementById('announcements-loading').style.display = 'none';
         showError('Fehler beim Laden: ' + error.message);
       }

@@ -59,10 +59,43 @@
   <script>
     const days = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag'];
 
+    // Demo-Speisepläne
+    const demoMealPlans = [
+      {
+        day_of_week: 1,
+        main_course: 'Hähnchen mit Kartoffeln',
+        side_dish: 'Gemüse',
+        dessert: 'Apfelkompott'
+      },
+      {
+        day_of_week: 2,
+        main_course: 'Spaghetti Bolognese',
+        side_dish: 'Salat',
+        dessert: 'Vanillepudding'
+      },
+      {
+        day_of_week: 3,
+        main_course: 'Fischfilet',
+        side_dish: 'Reis',
+        dessert: 'Schokoladenmousse'
+      },
+      {
+        day_of_week: 4,
+        main_course: 'Schnitzel',
+        side_dish: 'Pommes',
+        dessert: 'Obstsalat'
+      },
+      {
+        day_of_week: 5,
+        main_course: 'Vegetarische Lasagne',
+        side_dish: 'Brokkoli',
+        dessert: 'Eis'
+      }
+    ];
+
     async function loadMealPlans() {
       try {
-        const response = await fetch('/api/meal-plans');
-        const mealPlans = await response.json();
+        const mealPlans = demoMealPlans;
 
         if (mealPlans.length === 0) {
           showMessage('Kein Speiseplan vorhanden', 'error');
