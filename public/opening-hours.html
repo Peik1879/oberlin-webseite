@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Speiseplan - Oberlinhaus Werkstatt Portal</title>
+  <title>Öffnungszeiten - Oberlinhaus Werkstatt Portal</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -28,22 +28,64 @@
   </header>
 
   <main id="main-content">
-    <div class="container">
-      <h2>🍽️ Speiseplan</h2>
-      <p>Hier siehst du, was diese Woche zu essen gibt.</p>
+    <div class="container" style="max-width: 900px;">
+      <h2>⏰ Öffnungszeiten</h2>
+      <p>Hier findest du die Öffnungszeiten der Oberlinhaus Werkstatt.</p>
 
-      <div id="meal-plans-loading" style="text-align: center; padding: 2rem;">
-        <div class="spinner"></div>
-        <p>Wird geladen...</p>
+      <div class="card">
+        <h3>Reguläre Öffnungszeiten</h3>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+          <thead>
+            <tr style="border-bottom: 2px solid #b61b3e;">
+              <th style="text-align: left; padding: 0.75rem; color: #b61b3e;">Tag</th>
+              <th style="text-align: left; padding: 0.75rem; color: #b61b3e;">Öffnungszeiten</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid #ddd;">
+              <td style="padding: 0.75rem;"><strong>Montag</strong></td>
+              <td style="padding: 0.75rem;">08:00 - 16:00 Uhr</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #ddd;">
+              <td style="padding: 0.75rem;"><strong>Dienstag</strong></td>
+              <td style="padding: 0.75rem;">08:00 - 16:00 Uhr</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #ddd;">
+              <td style="padding: 0.75rem;"><strong>Mittwoch</strong></td>
+              <td style="padding: 0.75rem;">08:00 - 16:00 Uhr</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #ddd;">
+              <td style="padding: 0.75rem;"><strong>Donnerstag</strong></td>
+              <td style="padding: 0.75rem;">08:00 - 16:00 Uhr</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #ddd;">
+              <td style="padding: 0.75rem;"><strong>Freitag</strong></td>
+              <td style="padding: 0.75rem;">08:00 - 14:00 Uhr</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #ddd;">
+              <td style="padding: 0.75rem;"><strong>Samstag</strong></td>
+              <td style="padding: 0.75rem; color: #999;">Geschlossen</td>
+            </tr>
+            <tr>
+              <td style="padding: 0.75rem;"><strong>Sonntag</strong></td>
+              <td style="padding: 0.75rem; color: #999;">Geschlossen</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
-      <div id="meal-plans-container" style="display: none;">
-        <button onclick="window.print()" class="btn btn-secondary" style="margin-bottom: 1rem;">🖨️ Drucken</button>
-        
-        <div id="meal-plans-grid" class="grid"></div>
+      <div class="card" style="background-color: #fff3cd; border-left: 4px solid #a98b6c;">
+        <h3 style="margin-top: 0;">📌 Wichtige Hinweise</h3>
+        <ul style="margin: 0; padding-left: 1.5rem;">
+          <li>An Feiertagen bleibt die Werkstatt geschlossen</li>
+          <li>Pausenzeiten: 12:00 - 13:00 Uhr</li>
+          <li>Bei besonderen Anlässen können die Öffnungszeiten abweichen</li>
+        </ul>
       </div>
 
-      <div id="meal-plans-error" style="display: none;" class="alert alert-error"></div>
+      <div style="margin-top: 2rem; text-align: center;">
+        <a href="dashboard.html" class="btn">Zurück zum Dashboard</a>
+      </div>
     </div>
   </main>
 
@@ -55,75 +97,17 @@
 
   <script src="js/accessibility.js" type="module"></script>
   <script src="js/easy-language.js" type="module"></script>
-
+  
   <script>
-    const days = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag'];
+    document.getElementById('user-name').textContent = 'Demo Nutzer';
 
-    async function loadMealPlans() {
-      try {
-        const response = await fetch('/api/meal-plans');
-        const mealPlans = await response.json();
-
-        if (mealPlans.length === 0) {
-          showMessage('Kein Speiseplan vorhanden', 'error');
-          return;
-        }
-
-        const grid = document.getElementById('meal-plans-grid');
-        grid.innerHTML = '';
-
-        mealPlans.forEach((meal, index) => {
-          const day = days[meal.day_of_week - 1] || `Tag ${meal.day_of_week}`;
-          grid.innerHTML += `
-            <div class="card">
-              <h3 class="card-title">${day}</h3>
-              <div style="margin: 1rem 0;">
-                <strong>Hauptgang:</strong> ${meal.main_course}
-              </div>
-              ${meal.side_dish ? `
-                <div style="margin: 0.5rem 0;">
-                  <strong>Beilage:</strong> ${meal.side_dish}
-                </div>
-              ` : ''}
-              ${meal.dessert ? `
-                <div style="margin: 0.5rem 0;">
-                  <strong>Nachtisch:</strong> ${meal.dessert}
-                </div>
-              ` : ''}
-            </div>
-          `;
-        });
-
-        document.getElementById('meal-plans-loading').style.display = 'none';
-        document.getElementById('meal-plans-container').style.display = 'block';
-      } catch (error) {
-        showMessage('Fehler beim Laden des Speiseplans: ' + error.message, 'error');
-      }
-    }
-
-    function showMessage(message, type) {
-      document.getElementById('meal-plans-loading').style.display = 'none';
-      const errorEl = document.getElementById('meal-plans-error');
-      errorEl.textContent = message;
-      errorEl.className = `alert alert-${type}`;
-      errorEl.style.display = 'block';
-    }
-
-    function logout() {
+    document.getElementById('logout-btn').addEventListener('click', () => {
       window.location.href = 'index.html';
-    }
+    });
 
-    document.getElementById('logout-btn').addEventListener('click', logout);
     document.getElementById('font-size-btn').addEventListener('click', toggleFontSize);
     document.getElementById('text-to-speech-btn').addEventListener('click', toggleTextToSpeech);
     document.getElementById('easy-language-btn').addEventListener('click', toggleEasyLanguage);
-
-    // Init
-    loadFontSizePreference();
-    loadEasyLanguagePreference();
-    
-    document.getElementById('user-name').textContent = 'Demo Nutzer';
-    loadMealPlans();
 
     function toggleFontSize() {
       const html = document.documentElement;
@@ -158,8 +142,9 @@
         document.documentElement.setAttribute('data-easy-language', 'true');
       }
     }
+
+    loadFontSizePreference();
+    loadEasyLanguagePreference();
   </script>
 </body>
 </html>
-
-

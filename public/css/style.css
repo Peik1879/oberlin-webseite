@@ -116,6 +116,31 @@ header .container {
   gap: var(--spacing-lg);
 }
 
+/* Hero Image */
+.hero {
+  background: linear-gradient(180deg, rgba(182, 27, 62, 0.08), rgba(255, 255, 255, 0));
+  padding: var(--spacing-md) 0 0;
+}
+
+.hero-image {
+  max-width: 1400px;
+  margin: 0 auto;
+  height: 260px;
+  border-radius: 14px;
+  background-image: url("../img/gemalt_oberlin.jpg");
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+  border: 2px solid rgba(182, 27, 62, 0.2);
+}
+
+@media (max-width: 768px) {
+  .hero-image {
+    height: 180px;
+    border-radius: 10px;
+  }
+}
+
 .header-logo {
   display: flex;
   align-items: center;
@@ -124,20 +149,26 @@ header .container {
   min-width: 250px;
 }
 
-.logo-circle {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background-color: var(--white);
-  display: flex;
+.logo-link {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-weight: bold;
-  color: var(--primary-red);
-  font-size: 0.8rem;
-  text-align: center;
-  padding: var(--spacing-xs);
+  flex: 0 0 auto;
 }
+
+.logo-img {
+  width: 110px;
+  height: 110px;
+  object-fit: contain;
+}
+
+@media (max-width: 768px) {
+  .logo-img {
+    width: 80px;
+    height: 80px;
+  }
+}
+
 
 .header-content h1 {
   color: var(--white);
@@ -182,10 +213,17 @@ footer.accessibility-footer button {
 
 /* Main Content */
 main {
-  padding: var(--spacing-lg);
+  padding: 0 var(--spacing-lg) var(--spacing-lg);
   padding-bottom: 100px; /* Für Footer Abstand */
   max-width: 1400px;
   margin: 0 auto;
+}
+
+main .container {
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: var(--spacing-xl);
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .container {
@@ -198,7 +236,7 @@ main {
 /* Cards/Kacheln */
 .card {
   background-color: var(--white);
-  border: 2px solid var(--primary-red);
+  border: 3px solid var(--primary-red);
   border-radius: var(--border-radius);
   padding: var(--spacing-lg);
   margin-bottom: var(--spacing-lg);
@@ -206,6 +244,8 @@ main {
   overflow: hidden;
   transition: var(--transition);
   cursor: default;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .card::before {
@@ -221,7 +261,7 @@ main {
 .card:hover,
 .card:focus-within {
   transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(182, 27, 62, 0.2);
+  box-shadow: 0 12px 24px rgba(182, 27, 62, 0.3);
 }
 
 .card-emoji {
@@ -374,6 +414,11 @@ textarea {
 
   .grid.grid-4cols {
     grid-template-columns: repeat(4, 1fr);
+  }
+
+  /* Letzte Kachel zentrieren wenn 10 Elemente */
+  .grid .card:nth-child(10) {
+    grid-column: 2 / 3;
   }
 }
 

@@ -12,7 +12,9 @@
   <header role="banner">
     <div class="container">
       <div class="header-logo">
-        <div class="logo-circle">OH</div>
+        <a class="logo-link" href="dashboard.html" aria-label="Zum Dashboard">
+          <img class="logo-img" src="img/logo.png" alt="Oberlinhaus Logo">
+        </a>
         <div class="header-content">
           <h1>Oberlinhaus Werkstatt</h1>
           <p class="header-subtitle">Einfach. Übersichtlich. Barrierefrei.</p>
@@ -50,10 +52,50 @@
   <script src="js/easy-language.js" type="module"></script>
 
   <script>
+    // Demo-Daten für Umfragen
+    const demoSurveys = [
+      {
+        id: 1,
+        title: 'Betriebsausflug 2026',
+        question: 'Wohin soll unser nächster Betriebsausflug gehen?',
+        hasAnswered: false,
+        options: [
+          { id: 1, option_text: 'Zoo Berlin' },
+          { id: 2, option_text: 'Tropical Islands' },
+          { id: 3, option_text: 'Potsdamer Schlösser' },
+          { id: 4, option_text: 'Spreefahrt' }
+        ]
+      },
+      {
+        id: 2,
+        title: 'Mittagessen Wunsch',
+        question: 'Was soll es nächste Woche öfter geben?',
+        hasAnswered: false,
+        options: [
+          { id: 5, option_text: 'Pasta' },
+          { id: 6, option_text: 'Pizza' },
+          { id: 7, option_text: 'Salat' }
+        ]
+      }
+    ];
+
+    const demoResults = {
+      1: [
+        { option_text: 'Zoo Berlin', answer_count: 12 },
+        { option_text: 'Tropical Islands', answer_count: 8 },
+        { option_text: 'Potsdamer Schlösser', answer_count: 15 },
+        { option_text: 'Spreefahrt', answer_count: 5 }
+      ],
+      2: [
+        { option_text: 'Pasta', answer_count: 18 },
+        { option_text: 'Pizza', answer_count: 22 },
+        { option_text: 'Salat', answer_count: 7 }
+      ]
+    };
+
     async function loadSurveys() {
       try {
-        const response = await fetch('/api/surveys');
-        const surveys = await response.json();
+        const surveys = demoSurveys;
 
         const container = document.getElementById('surveys-container');
         container.innerHTML = '';
@@ -100,32 +142,27 @@
 
     async function submitAnswer(surveyId, optionId) {
       try {
-        const response = await fetch(`/api/surveys/${surveyId}/answer`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ optionId })
+        // Demo-Modus: Markiere Umfrage als beantwortet
+        const survey = demoSurveys.find(s => s.id === surveyId);
+        if (survey) {
+          survey.hasAnswered = true;
+        }
+
+        // Buttons deaktivieren
+        document.querySelectorAll(`#survey-${surveyId}-buttons button`).forEach(btn => {
+          btn.disabled = true;
         });
 
-        if (response.ok) {
-          // Buttons deaktivieren
-          document.querySelectorAll(`#survey-${surveyId}-buttons button`).forEach(btn => {
-            btn.disabled = true;
-          });
+        // Success Message
+        const surveyEl = document.querySelector(`#survey-${surveyId}-buttons`).parentElement;
+        const messageEl = document.createElement('small');
+        messageEl.className = 'alert alert-success';
+        messageEl.style.display = 'block';
+        messageEl.textContent = '✅ Danke für deine Antwort!';
+        surveyEl.appendChild(messageEl);
 
-          // Success Message
-          const surveyEl = document.querySelector(`#survey-${surveyId}-buttons`).parentElement;
-          const messageEl = document.createElement('small');
-          messageEl.className = 'alert alert-success';
-          messageEl.style.display = 'block';
-          messageEl.textContent = '✅ Danke für deine Antwort!';
-          surveyEl.appendChild(messageEl);
-
-          // Results laden
-          loadSurveyResults(surveyId);
-        } else {
-          const error = await response.json();
-          alert(error.error);
-        }
+        // Results laden
+        loadSurveyResults(surveyId);
       } catch (error) {
         alert('Fehler: ' + error.message);
       }
@@ -133,8 +170,7 @@
 
     async function loadSurveyResults(surveyId) {
       try {
-        const response = await fetch(`/api/surveys/${surveyId}/results`);
-        const results = await response.json();
+        const results = demoResults[surveyId] || [];
 
         const resultsContainer = document.getElementById(`survey-${surveyId}-results`);
         resultsContainer.innerHTML = '<h4>Ergebnisse:</h4>';

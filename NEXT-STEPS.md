@@ -39,7 +39,7 @@ Login: admin / 0000
 
 ```bash
 # Im Projektverzeichnis
-git init
+git init![bin ](image.png)
 git add .
 git commit -m "Initial: Oberlinhaus Workshop Portal MVP"
 git branch -M main

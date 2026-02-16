@@ -5,6 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - Oberlinhaus Werkstatt Portal</title>
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    body {
+      background-image: url('img/werk.jpg');
+      background-size: cover;
+      background-position: center center;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(245, 245, 245, 0.5);
+      z-index: -1;
+      pointer-events: none;
+    }
+  </style>
 </head>
 <body>
   <a href="#main-content" class="skip-to-main">Zum Hauptinhalt springen</a>
@@ -12,7 +34,9 @@
   <header role="banner">
     <div class="container">
       <div class="header-logo">
-        <div class="logo-circle">OBERLINHAUS</div>
+        <a class="logo-link" href="dashboard.html" aria-label="Zum Dashboard">
+          <img class="logo-img" src="img/logo.png" alt="Oberlinhaus Logo">
+        </a>
         <div class="header-content">
           <h1>Oberlinhaus Werkstatt</h1>
           <p class="header-subtitle">Einfach. Übersichtlich. Barrierefrei.</p>
@@ -25,11 +49,21 @@
     </div>
   </header>
 
+  <section class="hero" aria-label="Oberlinhaus Werkstatt">
+    <div class="hero-image"></div>
+  </section>
+
 
   <main id="main-content">
     <div class="container">
-      <h2>Willkommen!</h2>
-      <p>Wähle ein Thema aus der Navigation oben aus oder klicke auf eine der Kacheln unten.</p>
+      <h2 style="text-align: center; margin: 3rem 0;">Willkommen!</h2>
+
+      <!-- Vers des Tages -->
+      <div style="background: linear-gradient(135deg, #b61b3e 0%, #4a0f1f 100%); color: white; padding: 2rem; border-radius: 8px; margin-bottom: 2rem; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+        <p style="margin: 0 0 1rem 0; font-size: 0.95rem; opacity: 0.9; font-weight: bold;">✨ Vers des Tages</p>
+        <p style="margin: 0; font-size: 1.2rem; line-height: 1.8; font-style: italic; margin-bottom: 1rem;" id="verse-text"></p>
+        <p style="margin: 0; font-size: 0.9rem; opacity: 0.9;" id="verse-ref"></p>
+      </div>
 
       <!-- Ankündigungen Banner -->
       <div id="announcements-banner" style="margin-bottom: 2rem;"></div>
@@ -37,6 +71,13 @@
       <!-- Schnell-Zugriff Kacheln -->
       <div class="grid">
         
+        <!-- Aufgaben Kalender -->
+        <a href="calendar.html" class="card" role="button">
+          <span class="card-emoji">📅</span>
+          <h3 class="card-title" data-easy-text="Mein Kalender" data-normal-text="Aufgaben Kalender">Aufgaben Kalender</h3>
+          <p class="card-description">Verwalte deine täglichen Aufgaben</p>
+        </a>
+
         <!-- Speiseplan -->
         <a href="meal-plans.html" class="card" role="button">
           <span class="card-emoji">🍽️</span>
@@ -45,7 +86,7 @@
         </a>
 
         <!-- Öffnungszeiten -->
-        <a href="index.html" class="card" role="button">
+        <a href="opening-hours.html" class="card" role="button">
           <span class="card-emoji">⏰</span>
           <h3 class="card-title" data-easy-text="Wann ist offen?" data-normal-text="Öffnungszeiten">Öffnungszeiten</h3>
           <p class="card-description">Wann ist die Werkstatt auf?</p>
@@ -140,6 +181,52 @@
       window.location.href = 'index.html';
     }
 
+    function loadVerseOfDay() {
+      const verses = [
+        {
+          text: "Liebe ist geduldig und freundlich. Sie ist nicht eifersüchtig, prahlt nicht und ist nicht arrogant.",
+          ref: "1. Korinther 13,4"
+        },
+        {
+          text: "Vertraue auf den HERRN von ganzem Herzen und verlasse dich nicht auf deinen Verstand.",
+          ref: "Sprüche 3,5"
+        },
+        {
+          text: "Ich bin gekommen, damit sie Leben haben und volle Fülle haben.",
+          ref: "Johannes 10,10"
+        },
+        {
+          text: "Denn Gott hat uns nicht einen Geist der Angst gegeben, sondern einen Geist der Kraft, der Liebe und der Besonnenheit.",
+          ref: "2. Timotheus 1,7"
+        },
+        {
+          text: "Der HERR ist mein Licht und mein Heil; vor wem sollte ich mich fürchten?",
+          ref: "Psalm 27,1"
+        },
+        {
+          text: "Seid dankbar in allen Dingen; denn das ist Gottes Wille für euch in Christus Jesus.",
+          ref: "1. Thessalonicher 5,18"
+        },
+        {
+          text: "Und das Friedensgebot Gottes, das alles Verständnis übersteigt, wird eure Herzen und eure Sinne in Christus Jesus bewachen.",
+          ref: "Philipper 4,7"
+        },
+        {
+          text: "Jesus sagte zu ihnen: Ich bin das Licht der Welt. Wer mir folgt, wird nicht in der Finsternis wandeln.",
+          ref: "Johannes 8,12"
+        }
+      ];
+
+      // Vers des Tages basierend auf Datum
+      const today = new Date();
+      const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 86400000);
+      const verseIndex = dayOfYear % verses.length;
+      const verse = verses[verseIndex];
+
+      document.getElementById('verse-text').textContent = verse.text;
+      document.getElementById('verse-ref').textContent = verse.ref;
+    }
+
     function toggleFontSize() {
       const html = document.documentElement;
       const currentSize = html.className;
@@ -178,6 +265,7 @@
     // Init
     loadFontSizePreference();
     loadEasyLanguagePreference();
+    loadVerseOfDay();
     loadDashboard();
 
     function loadFontSizePreference() {
