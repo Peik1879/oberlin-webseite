@@ -49,6 +49,18 @@
     </div>
   </header>
 
+  <!-- Mobile Hamburger Menu -->
+  <button class="hamburger-btn" id="hamburger-btn" aria-label="Menü">☰</button>
+  <div class="mobile-menu-overlay" id="mobile-menu-overlay"></div>
+  <div class="mobile-menu" id="mobile-menu">
+    <button class="mobile-menu-close" id="mobile-menu-close">✕</button>
+    <div class="mobile-menu-content">
+      <h3>Benutzermenü</h3>
+      <p id="mobile-user-name" style="color: white; margin-bottom: 1.5rem;">Demo Nutzer</p>
+      <button class="mobile-logout-btn" id="mobile-logout-btn">Abmelden</button>
+    </div>
+  </div>
+
   <section class="hero" aria-label="Oberlinhaus Werkstatt">
     <div class="hero-image"></div>
   </section>
@@ -153,15 +165,46 @@
   </main>
 
   <footer class="accessibility-footer">
-    <button id="font-size-btn" aria-label="Schriftgröße ändern">🔤 A</button>
-    <button id="text-to-speech-btn" aria-label="Vorlesen" aria-pressed="false">🔊</button>
-    <button id="easy-language-btn" aria-label="Leichte Sprache" aria-pressed="false">ABC</button>
+    <button id="font-size-btn" aria-label="Schriftgröße ändern" title="Schriftgröße ändern">🔤</button>
+    <button id="text-to-speech-btn" aria-label="Vorlesen" aria-pressed="false" title="Audio-Modus">🔊</button>
+    <button id="easy-language-btn" aria-label="Leichte Sprache" aria-pressed="false" title="Leichte Sprache">ABC</button>
+    <button id="minimize-btn" aria-label="Minimieren" title="Zusammenklappen">−</button>
   </footer>
 
   <script src="js/accessibility.js" type="module"></script>
   <script src="js/easy-language.js" type="module"></script>
   
   <script>
+    // Mobile Menu Toggle
+    const hamburgerBtn = document.getElementById('hamburger-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+    const mobileMenuClose = document.getElementById('mobile-menu-close');
+
+    hamburgerBtn.addEventListener('click', () => {
+      mobileMenu.classList.add('active');
+      mobileMenuOverlay.classList.add('active');
+    });
+
+    mobileMenuClose.addEventListener('click', () => {
+      mobileMenu.classList.remove('active');
+      mobileMenuOverlay.classList.remove('active');
+    });
+
+    mobileMenuOverlay.addEventListener('click', () => {
+      mobileMenu.classList.remove('active');
+      mobileMenuOverlay.classList.remove('active');
+    });
+
+    document.getElementById('mobile-logout-btn').addEventListener('click', logout);
+
+    // Minimize Footer
+    document.getElementById('minimize-btn').addEventListener('click', function() {
+      const footer = document.querySelector('.accessibility-footer');
+      footer.classList.toggle('minimized');
+      this.textContent = footer.classList.contains('minimized') ? '+' : '−';
+    });
+
     // Accessibility Buttons
     document.getElementById('font-size-btn').addEventListener('click', toggleFontSize);
     document.getElementById('text-to-speech-btn').addEventListener('click', toggleTextToSpeech);
