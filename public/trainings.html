@@ -28,11 +28,17 @@
     </div>
   </main>
   <footer class="accessibility-footer">
-    <button id="font-size-btn">🔤 A</button>
-    <button id="text-to-speech-btn">🔊</button>
-    <button id="easy-language-btn">ABC</button>
+    <button id="font-size-btn" aria-label="Schriftgröße ändern" title="Schriftgröße ändern">🔤</button>
+    <button id="text-to-speech-btn" aria-label="Vorlesen" aria-pressed="false" title="Audio-Modus">🔊</button>
+    <button id="easy-language-btn" aria-label="Leichte Sprache" aria-pressed="false" title="Leichte Sprache">ABC</button>
+    <button id="minimize-btn" aria-label="Minimieren" title="Zusammenklappen">−</button>
   </footer>
   <script>
+    document.getElementById('minimize-btn').addEventListener('click', function() {
+      const footer = document.querySelector('.accessibility-footer');
+      footer.classList.toggle('minimized');
+      this.textContent = footer.classList.contains('minimized') ? '+' : '−';
+    });
     document.getElementById('user-name').textContent = 'Demo Nutzer';
     fetch('/api/trainings').then(r => r.json()).then(d => {
       const c = document.getElementById('trainings-container');

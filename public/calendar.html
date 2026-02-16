@@ -448,15 +448,22 @@
       </div>
 
   <footer class="accessibility-footer">
-    <button id="font-size-btn" aria-label="Schriftgröße ändern">🔤 A</button>
-    <button id="text-to-speech-btn" aria-label="Vorlesen" aria-pressed="false">🔊</button>
-    <button id="easy-language-btn" aria-label="Leichte Sprache" aria-pressed="false">ABC</button>
+    <button id="font-size-btn" aria-label="Schriftgröße ändern" title="Schriftgröße ändern">🔤</button>
+    <button id="text-to-speech-btn" aria-label="Vorlesen" aria-pressed="false" title="Audio-Modus">🔊</button>
+    <button id="easy-language-btn" aria-label="Leichte Sprache" aria-pressed="false" title="Leichte Sprache">ABC</button>
+    <button id="minimize-btn" aria-label="Minimieren" title="Zusammenklappen">−</button>
   </footer>
 
   <script src="js/accessibility.js" type="module"></script>
   <script src="js/easy-language.js" type="module"></script>
 
   <script>
+    // Minimize Footer
+    document.getElementById('minimize-btn').addEventListener('click', function() {
+      const footer = document.querySelector('.accessibility-footer');
+      footer.classList.toggle('minimized');
+      this.textContent = footer.classList.contains('minimized') ? '+' : '−';
+    });
     const monthYearEl = document.getElementById('month-year');
     const calendarDaysEl = document.getElementById('calendar-days');
     const selectedDateEl = document.getElementById('selected-date');
