@@ -40,10 +40,18 @@
       this.textContent = footer.classList.contains('minimized') ? '+' : '−';
     });
     document.getElementById('user-name').textContent = 'Demo Nutzer';
-    fetch('/api/jobs').then(r => r.json()).then(d => {
-      const c = document.getElementById('jobs-container');
-      d.forEach(j => c.innerHTML += `<div class="card"><h3>${j.title}</h3><p>${j.description}</p><p>⏱️ ${j.hours_per_week}h/Woche</p><button class="btn">Bewerben</button></div>`);
-    });
+    // Beispieldaten für Jobbörse
+    const jobs = [
+      {title: 'Helfer in der Küche', description: 'Unterstützung beim Kochen und Vorbereiten von Speisen. Sauber machen nach dem Essen.', hours_per_week: 20, area: 'Küche'},
+      {title: 'Garten-Helfer', description: 'Pflanzen gießen, Unkraut jäten und Rasen mähen. Arbeit an der frischen Luft!', hours_per_week: 15, area: 'Garten'},
+      {title: 'Wäscherei-Mitarbeiter', description: 'Wäsche waschen, trocknen und zusammenlegen. Sorgfältige Arbeit ist wichtig.', hours_per_week: 25, area: 'Wäscherei'},
+      {title: 'Hausmeister-Assistent', description: 'Kleine Reparaturen und Wartungsarbeiten. Hilfe bei Umzügen und Transport.', hours_per_week: 30, area: 'Hauswirtschaft'},
+      {title: 'Büro-Helfer', description: 'Post sortieren, Kopieren und einfache Computer-Arbeiten. Freundlich am Telefon sein.', hours_per_week: 20, area: 'Verwaltung'},
+      {title: 'Montage-Helfer', description: 'Kleine Teile zusammenbauen und verpacken. Genaues Arbeiten ist wichtig.', hours_per_week: 35, area: 'Werkstatt'},
+      {title: 'Reinigungskraft', description: 'Räume sauber halten: Staubsaugen, Wischen und Aufräumen.', hours_per_week: 20, area: 'Gebäudereinigung'}
+    ];
+    const c = document.getElementById('jobs-container');
+    jobs.forEach(j => c.innerHTML += `<div class="card"><h3>${j.title}</h3><p>${j.description}</p><p>⏱️ ${j.hours_per_week}h/Woche | 📂 ${j.area}</p><button class="btn">Bewerben</button></div>`);
     document.getElementById('logout-btn').onclick = () => location.href = 'index.html';
   </script>
 </body>

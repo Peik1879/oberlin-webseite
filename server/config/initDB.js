@@ -262,6 +262,81 @@ async function initDatabase() {
     );
     console.log('✅ Demo-Admin erstellt (username: admin, pin: 0000)');
 
+    // Beispiel-Weiterbildungen einfügen
+    const trainingsData = [
+      ['Computer-Grundkurs für Anfänger', 'Lernen Sie die Basics: E-Mails schreiben, im Internet surfen und Texte schreiben. Keine Vorkenntnisse nötig!', '2026-03-15', 5],
+      ['Erste-Hilfe-Kurs', 'Wichtiger Kurs für Notfallsituationen. Sie lernen, wie man anderen Menschen in Not helfen kann.', '2026-03-20', 2],
+      ['Bewerbungstraining', 'Wie schreibe ich eine gute Bewerbung? Wie bereite ich mich auf ein Vorstellungsgespräch vor? Wir üben gemeinsam!', '2026-04-10', 3],
+      ['Kochen und Ernährung', 'Gesund kochen leicht gemacht! Wir bereiten leckere und gesunde Gerichte zusammen zu.', '2026-04-25', 4],
+      ['Kommunikation im Beruf', 'Besser kommunizieren mit Kollegen und Vorgesetzten. Mehr Selbstbewusstsein im Job!', '2026-05-05', 2]
+    ];
+
+    for (const training of trainingsData) {
+      await connection.query(
+        `INSERT INTO trainings (title, description, start_date, duration_days, created_by) 
+         VALUES (?, ?, ?, ?, 1)`,
+        training
+      );
+    }
+    console.log('✅ Beispiel-Weiterbildungen eingefügt');
+
+    // Kontaktpersonen für Angebote
+    const contactsData = [
+      ['Frau Schmidt', '030-12345-100', 'Sport', '09:00:00', '16:00:00'],
+      ['Herr Müller', '030-12345-101', 'Kultur', '10:00:00', '17:00:00'],
+      ['Frau Weber', '030-12345-102', 'Freizeit', '08:00:00', '15:00:00']
+    ];
+
+    for (const contact of contactsData) {
+      await connection.query(
+        `INSERT INTO contacts (name, phone, category, available_from, available_to) 
+         VALUES (?, ?, ?, ?, ?)`,
+        contact
+      );
+    }
+    console.log('✅ Kontaktpersonen eingefügt');
+
+    // Beispiel-Freizeitangebote einfügen
+    const offersData = [
+      ['Fußball-Gruppe', 'Sport', 'Jeden Montag spielen wir zusammen Fußball. Für Anfänger und Fortgeschrittene!', '15:00:00', 'Sporthalle', 1],
+      ['Kunst-Workshop', 'Kultur', 'Malen, Zeichnen und Basteln. Hier können Sie kreativ sein!', '14:00:00', 'Raum 201', 2],
+      ['Chor "Singfreude"', 'Kultur', 'Wir singen gemeinsam bekannte Lieder. Neue Mitglieder sind herzlich willkommen!', '16:30:00', 'Musikraum', 2],
+      ['Tischtennis-Treff', 'Sport', 'Jeden Mittwoch Tischtennis spielen. Macht viel Spaß!', '15:30:00', 'Freizeitraum', 1],
+      ['Koch-Gruppe', 'Freizeit', 'Zusammen kochen und essen. Wir probieren Rezepte aus aller Welt!', '13:00:00', 'Küche', 3],
+      ['Gesellschaftsspiele', 'Freizeit', 'Spielen Sie gerne? Bei uns gibt es viele verschiedene Spiele!', '15:00:00', 'Gemeinschaftsraum', 3],
+      ['Yoga für Alle', 'Sport', 'Entspannung und sanfte Bewegungen. Gut für Körper und Geist!', '10:00:00', 'Gymnastikraum', 1],
+      ['Theater-Gruppe', 'Kultur', 'Wir proben kleine Theaterstücke und führen sie auf. Machen Sie mit!', '16:00:00', 'Theatersaal', 2]
+    ];
+
+    for (const offer of offersData) {
+      await connection.query(
+        `INSERT INTO offers (title, category, description, time, location, contact_person_id, created_by) 
+         VALUES (?, ?, ?, ?, ?, ?, 1)`,
+        offer
+      );
+    }
+    console.log('✅ Beispiel-Freizeitangebote eingefügt');
+
+    // Beispiel-Jobangebote einfügen
+    const jobsData = [
+      ['Helfer in der Küche', 'Unterstützung beim Kochen und Vorbereiten von Speisen. Sauber machen nach dem Essen.', 'Küche', 20],
+      ['Garten-Helfer', 'Pflanzen gießen, Unkraut jäten und Rasen mähen. Arbeit an der frischen Luft!', 'Garten & Außenbereich', 15],
+      ['Wäscherei-Mitarbeiter', 'Wäsche waschen, trocknen und zusammenlegen. Sorgfältige Arbeit ist wichtig.', 'Wäscherei', 25],
+      ['Hausmeister-Assistent', 'Kleine Reparaturen und Wartungsarbeiten. Hilfe bei Umzügen und Transport.', 'Hauswirtschaft', 30],
+      ['Büro-Helfer', 'Post sortieren, Kopieren und einfache Computer-Arbeiten. Freundlich am Telefon sein.', 'Verwaltung', 20],
+      ['Montage-Helfer', 'Kleine Teile zusammenbauen und verpacken. Genaues Arbeiten ist wichtig.', 'Werkstatt', 35],
+      ['Reinigungskraft', 'Räume sauber halten: Staubsaugen, Wischen und Aufräumen.', 'Gebäudereinigung', 20]
+    ];
+
+    for (const job of jobsData) {
+      await connection.query(
+        `INSERT INTO jobs (title, description, area, hours_per_week, created_by, active) 
+         VALUES (?, ?, ?, ?, 1, TRUE)`,
+        job
+      );
+    }
+    console.log('✅ Beispiel-Jobangebote eingefügt');
+
     console.log('🎉 Datenbank erfolgreich initialisiert!');
   } catch (error) {
     console.error('❌ Fehler beim Initialisieren:', error);

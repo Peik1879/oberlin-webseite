@@ -40,10 +40,16 @@
       this.textContent = footer.classList.contains('minimized') ? '+' : '−';
     });
     document.getElementById('user-name').textContent = 'Demo Nutzer';
-    fetch('/api/trainings').then(r => r.json()).then(d => {
-      const c = document.getElementById('trainings-container');
-      d.forEach(t => c.innerHTML += `<div class="card"><h3>${t.title}</h3><p>${t.description}</p><button class="btn">Interesse anmelden</button></div>`);
-    });
+    // Beispieldaten für Weiterbildungen
+    const trainings = [
+      {title: 'Computer-Grundkurs für Anfänger', description: 'Lernen Sie die Basics: E-Mails schreiben, im Internet surfen und Texte schreiben. Keine Vorkenntnisse nötig! Start: 15.03.2026, Dauer: 5 Tage'},
+      {title: 'Erste-Hilfe-Kurs', description: 'Wichtiger Kurs für Notfallsituationen. Sie lernen, wie man anderen Menschen in Not helfen kann. Start: 20.03.2026, Dauer: 2 Tage'},
+      {title: 'Bewerbungstraining', description: 'Wie schreibe ich eine gute Bewerbung? Wie bereite ich mich auf ein Vorstellungsgespräch vor? Wir üben gemeinsam! Start: 10.04.2026, Dauer: 3 Tage'},
+      {title: 'Kochen und Ernährung', description: 'Gesund kochen leicht gemacht! Wir bereiten leckere und gesunde Gerichte zusammen zu. Start: 25.04.2026, Dauer: 4 Tage'},
+      {title: 'Kommunikation im Beruf', description: 'Besser kommunizieren mit Kollegen und Vorgesetzten. Mehr Selbstbewusstsein im Job! Start: 05.05.2026, Dauer: 2 Tage'}
+    ];
+    const c = document.getElementById('trainings-container');
+    trainings.forEach(t => c.innerHTML += `<div class="card"><h3>${t.title}</h3><p>${t.description}</p><button class="btn">Interesse anmelden</button></div>`);
     document.getElementById('logout-btn').onclick = () => location.href = 'index.html';
   </script>
 </body>

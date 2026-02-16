@@ -40,10 +40,19 @@
       this.textContent = footer.classList.contains('minimized') ? '+' : '−';
     });
     document.getElementById('user-name').textContent = 'Demo Nutzer';
-    fetch('/api/offers').then(r => r.json()).then(d => {
-      const c = document.getElementById('offers-container');
-      d.forEach(o => c.innerHTML += `<div class="card"><h3>${o.title}</h3><p>${o.description}</p><p>🕐 ${o.time} | 📍 ${o.location}</p></div>`);
-    });
+    // Beispieldaten für Freizeitangebote
+    const offers = [
+      {title: 'Fußball-Gruppe', description: 'Jeden Montag spielen wir zusammen Fußball. Für Anfänger und Fortgeschrittene!', time: '15:00', location: 'Sporthalle'},
+      {title: 'Kunst-Workshop', description: 'Malen, Zeichnen und Basteln. Hier können Sie kreativ sein!', time: '14:00', location: 'Raum 201'},
+      {title: 'Chor "Singfreude"', description: 'Wir singen gemeinsam bekannte Lieder. Neue Mitglieder sind herzlich willkommen!', time: '16:30', location: 'Musikraum'},
+      {title: 'Tischtennis-Treff', description: 'Jeden Mittwoch Tischtennis spielen. Macht viel Spaß!', time: '15:30', location: 'Freizeitraum'},
+      {title: 'Koch-Gruppe', description: 'Zusammen kochen und essen. Wir probieren Rezepte aus aller Welt!', time: '13:00', location: 'Küche'},
+      {title: 'Gesellschaftsspiele', description: 'Spielen Sie gerne? Bei uns gibt es viele verschiedene Spiele!', time: '15:00', location: 'Gemeinschaftsraum'},
+      {title: 'Yoga für Alle', description: 'Entspannung und sanfte Bewegungen. Gut für Körper und Geist!', time: '10:00', location: 'Gymnastikraum'},
+      {title: 'Theater-Gruppe', description: 'Wir proben kleine Theaterstücke und führen sie auf. Machen Sie mit!', time: '16:00', location: 'Theatersaal'}
+    ];
+    const c = document.getElementById('offers-container');
+    offers.forEach(o => c.innerHTML += `<div class="card"><h3>${o.title}</h3><p>${o.description}</p><p>🕐 ${o.time} | 📍 ${o.location}</p></div>`);
     document.getElementById('logout-btn').onclick = () => location.href = 'index.html';
   </script>
 </body>
