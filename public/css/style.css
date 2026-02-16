@@ -258,15 +258,30 @@ main {
 
 /* Mobile Hamburger Menu - Hidden by default on desktop */
 .hamburger-btn {
-  display: none;
+  display: none !important;
 }
 
 .mobile-menu {
-  display: none;
+  display: none !important;
 }
 
 .mobile-menu-overlay {
-  display: none;
+  display: none !important;
+}
+
+/* Desktop view - ensure mobile menu stays hidden */
+@media (min-width: 769px) {
+  .hamburger-btn {
+    display: none !important;
+  }
+
+  .mobile-menu {
+    display: none !important;
+  }
+
+  .mobile-menu-overlay {
+    display: none !important;
+  }
 }
 
 main .container {
